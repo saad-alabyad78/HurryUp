@@ -123,8 +123,19 @@ public function findShortestPath(Request $request)
         $path = $this->shortestPath($sourceVertexId, $targetVertexId);
 
        Edges::whereIn('id', $newEdgesIds)->delete();
+       $newPath = [];
+       foreach (range(0, count($path) - 2) as $i) {
+           $vertex = Vertices::find($path[$i]);
+           $vertex2 = Vertices::find($path[$i + 1]);
+           $newPath[] = $path[$i];
+           if ($vertex->bus_line_id != $vertex2->bus_line_id) {
+               $newPath[] = -1;
+           }
+       }
+       $newPath[] = end($path);
+       $path = $newPath;
+        return response()->json($path);
 
-       // return response()->json($path);
 
 
 
