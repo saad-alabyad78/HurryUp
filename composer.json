@@ -17,6 +17,8 @@
         "tymon/jwt-auth": "^1.0@dev"
     },
     "require-dev": {
+        "beyondcode/laravel-dump-server": "^1.0",
+        "filp/whoops": "^2.0",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/breeze": "^1.10",
