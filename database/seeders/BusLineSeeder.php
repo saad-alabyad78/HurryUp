@@ -12,15 +12,38 @@ use \Grimzy\LaravelMysqlSpatial\Types\Point;
 
 class BusLineSeeder extends Seeder
 {
+    private function setFKCheckOff() {
+
+        switch(DB::getDriverName()) {
+            case 'mysql':
+                DB::statement('SET FOREIGN_KEY_CHECKS=0');
+                break;
+            case 'sqlite':
+                DB::statement('PRAGMA foreign_keys = OFF');
+                break;
+        }
+    }
+
+    private function setFKCheckOn() {
+        switch(DB::getDriverName()) {
+            case 'mysql':
+                DB::statement('SET FOREIGN_KEY_CHECKS=1');
+                break;
+            case 'sqlite':
+                DB::statement('PRAGMA foreign_keys = ON');
+                break;
+        }
+    }
+
     public function run()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $this->setFKCheckOff();
 
         DB::table('vertices')->truncate();
         DB::table('bus_lines')->truncate();
         DB::table('edges')->truncate();
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        $this->setFKCheckOn();
 
         $busLines = [
             [
@@ -82,7 +105,7 @@ class BusLineSeeder extends Seeder
                 $vertex->point = new Point($vertexData['longitude'], $vertexData['latitude']);
                 $vertex->name = $vertexData['name'];
 
-                $vertex->save();
+                $vertex->save();return ;
 
                 if ($previousVertex) {
                     $distance = $this->calculateDistance(
