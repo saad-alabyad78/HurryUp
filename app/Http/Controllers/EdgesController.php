@@ -34,10 +34,10 @@ class EdgesController extends Controller
         $target_vertex = Vertices::find($target_vertex_id);
 
         $distance = $this->calculateDistance(
-            $source_vertex->point->getLat(),
-            $source_vertex->point->getLng(),
-            $target_vertex->point->getLat(),
-            $target_vertex->point->getLng()
+            $source_vertex->lat,
+            $source_vertex->lon,
+            $target_vertex->lat,
+            $target_vertex->lon
         );
 
         $status = $data['status'];
@@ -100,10 +100,10 @@ public function findShortestPath(Request $request)
 
         foreach ($allVertices as $vertex) {
             $distance = $this->calculateDistance(
-                $vertex->point->getLat(),
-                $vertex->point->getLng(),
-                $targetVertex->point->getLat(),
-                $targetVertex->point->getLng()
+                $vertex->lat,
+                $vertex->lon,
+                $targetVertex->lat,
+                $targetVertex->lon
             );
             if ($distance != 0) {
                 $edge = new Edges();

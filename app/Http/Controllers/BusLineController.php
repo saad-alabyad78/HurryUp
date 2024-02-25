@@ -6,7 +6,7 @@ use App\Models\BusLine;
 use Illuminate\Http\Request;
 use App\Models\Vertices;
 use App\Models\Edges;
-use \Grimzy\LaravelMysqlSpatial\Types\Point;
+//use \Grimzy\LaravelMysqlSpatial\Types\Point;
 class BusLineController extends Controller
 {
 
@@ -39,15 +39,16 @@ public function store(Request $request)
         $vertex = new Vertices();
         $vertex->bus_line_id  = $busLine->id;
         $vertex->name = $vertexData['name'];
-        $vertex->point = new Point($vertexData['longitude'], $vertexData['latitude']);
+        $vertex->lat = $vertexData['longitude'];
+        $vertex->lon = $vertexData['latitude'];
         $vertex->save();
 
         if ($previousVertex) {
             $distance = $this->calculateDistance(
-                $previousVertex->point->getLat(),
-                $previousVertex->point->getLng(),
-                $vertex->point->getLat(),
-                $vertex->point->getLng()
+                $previousVertex->lat,
+                $previousVertex->lon,
+                $vertex->lat,
+                $vertex->lon,
             );
 
             $edge = new Edges();
@@ -68,10 +69,10 @@ public function store(Request $request)
     // Add an edge between the final vertex and the first vertex
     if ($previousVertex && $firstVertex) {
         $distance = $this->calculateDistance(
-            $previousVertex->point->getLat(),
-            $previousVertex->point->getLng(),
-            $firstVertex->point->getLat(),
-            $firstVertex->point->getLng()
+            $previousVertex->lat,
+            $previousVertex->lon,
+            $firstVertex->lat,
+            $firstVertex->lon,
         );
 
         $edge = new Edges();
@@ -133,10 +134,10 @@ function addShortestDistanceEdge($busLineId1, $busLineId2)
     foreach ($vertices1 as $vertex1) {
         foreach ($vertices2 as $vertex2) {
             $distance = $this->calculateDistance(
-                $vertex1->point->getLat(),
-                $vertex1->point->getLng(),
-                $vertex2->point->getLat(),
-                $vertex2->point->getLng()
+                $vertex1->lat,
+                $vertex1->lon,
+                $vertex2->lat,
+                $vertex2->lon,
             );
 
             if ($distance < $shortestDistance) {

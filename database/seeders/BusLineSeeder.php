@@ -8,7 +8,7 @@ use App\Models\BusLine;
 use App\Models\Vertices;
 use App\Models\Edges;
 use Illuminate\Support\Facades\DB;
-use \Grimzy\LaravelMysqlSpatial\Types\Point;
+//use \Grimzy\LaravelMysqlSpatial\Types\Point;
 
 class BusLineSeeder extends Seeder
 {
@@ -102,17 +102,18 @@ class BusLineSeeder extends Seeder
             foreach ($verticesData as $vertexData) {
                 $vertex = new Vertices();
                 $vertex->bus_line_id = $busLine->id;
-                $vertex->point = new Point($vertexData['longitude'], $vertexData['latitude']);
+                $vertex->lat = $vertexData['latitude'] ;
+                $vertex->lon = $vertexData['longitude'] ;
                 $vertex->name = $vertexData['name'];
 
                 $vertex->save();return ;
 
                 if ($previousVertex) {
                     $distance = $this->calculateDistance(
-                        $previousVertex->point->getLat(),
-                        $previousVertex->point->getLng(),
-                        $vertex->point->getLat(),
-                        $vertex->point->getLng()
+                        $previousVertex->lat,
+                        $previousVertex->lon,
+                        $vertex->lat,
+                        $vertex->lon,
                     );
 
                     $edge = new Edges();
@@ -153,10 +154,10 @@ class BusLineSeeder extends Seeder
         foreach ($vertices1 as $vertex1) {
             foreach ($vertices2 as $vertex2) {
                 $distance = $this->calculateDistance(
-                    $vertex1->point->getLat(),
-                    $vertex1->point->getLng(),
-                    $vertex2->point->getLat(),
-                    $vertex2->point->getLng()
+                    $vertex1->lat,
+                    $vertex1->lon,
+                    $vertex2->lat,
+                    $vertex2->lon,
                 );
 
                 if ($distance < $shortestDistance) {

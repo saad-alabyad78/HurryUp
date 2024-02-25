@@ -12,7 +12,10 @@ class CreateVerticesTable extends Migration
             $table->unsignedBigInteger('bus_line_id');
             $table->string('name');
 
-            $table->point('point');
+            //$table->point('point');
+            $table->decimal('lat');
+            $table->decimal('lon');
+
             $table->boolean('is_busy')->default(false);
             $table->timestamp('busy_at')->nullable();
             $table->integer('feedback_count')->default(0);
